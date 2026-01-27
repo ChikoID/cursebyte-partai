@@ -1,6 +1,6 @@
 name: cursebyte-partai
 version: "1.0"
-main: com.plugin.cursebyte.PartaiCore
+main: com.cursebyte.plugin.PartaiCore
 api-version: "1.21"
 load: STARTUP
 authors: [ChikoID]
