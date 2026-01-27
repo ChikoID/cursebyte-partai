@@ -1,0 +1,29 @@
+max-members: 50
+invite-expiration: 15 # in minutes
+
+role:
+    ketua:
+        nama: "Ketua"
+        level: 4
+        jumlah: 1 # Hanya 1 ketua per partai
+        izin: []
+    wakil_ketua:
+        nama: "Wakil Ketua"
+        level: 3
+        jumlah: 1 # Hanya 1 wakil ketua per partai
+        izin: []
+    bendahara:
+        nama: "Bendahara"
+        level: 2
+        jumlah: 1 # Hanya 1 bendahara per partai
+        izin: []
+    sekretaris:
+        nama: "Sekretaris"
+        level: 2
+        jumlah: 2 # 2 sekretaris per partai
+        izin: []
+    anggota:
+        nama: "Anggota"
+        level: 1
+        jumlah: 44 # Sisa anggota hingga total 50 Tidak boleh melewati batas dari max-members
+        izin: []

@@ -1,0 +1,20 @@
+name: cursebyte-partai
+version: "1.0"
+main: com.plugin.cursebyte.PartaiCore
+api-version: "1.21"
+load: STARTUP
+authors: [ChikoID]
+description: Partai Craft adalah plugin organisasi / partai di server Minecraft (Paper).
+
+commands:
+    partai:
+        description: Kelola partai Anda.
+        usage: /<command> <subcommand>
+        aliases: [p, pt]
+
+    adminpartai:
+        description: Perintah admin untuk mengelola partai.
+        usage: /<command> <subcommand>
+        aliases: [ap, apt]
+        default: op
+        permission: partai.admin
