@@ -21,7 +21,8 @@ public class ResetCommand {
 
     public void execute(CommandSender sender, String[] args) {
         if (args.length < 2) {
-            MessageUtils.sendError(sender, "Gunakan /partaiadmin <subcommand>");
+            MessageUtils.sendError(sender, "Gunakan /adminpartai <subcommand>");
+            return;
         }
 
         if (args.length == 1) {
@@ -37,11 +38,9 @@ public class ResetCommand {
             String expectedCode = resetCodes.get(sender.getName());
             if (expectedCode == null) {
                 MessageUtils.sendError(sender, "Kode reset tidak valid atau sudah expired.");
-                return;
             } else if (code.equals(expectedCode)) {
                 PartaiManager.deleteAll();
                 MessageUtils.sendSuccess(sender, "Semua data partai telah direset.");
-                plugin.getLogger().info("Semua data partai telah direset oleh " + sender.getName());
             } else {
                 MessageUtils.sendError(sender, "Kode reset tidak valid.");
             }

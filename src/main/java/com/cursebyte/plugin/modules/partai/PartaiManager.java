@@ -2,6 +2,8 @@ package com.cursebyte.plugin.modules.partai;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import com.cursebyte.plugin.database.DatabaseManager;
@@ -174,5 +176,62 @@ public class PartaiManager {
         }
 
         return null;
+    }
+
+    public static UUID getUuidByName(String name) {
+        String sql = "SELECT uuid FROM partai WHERE name = ?";
+
+        try (PreparedStatement ps = DatabaseManager.getConnection().prepareStatement(sql)) {
+            ps.setString(1, name);
+            var rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return UUID.fromString(rs.getString("uuid"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static Double getBalance(UUID uuid) {
+        String sql = "SELECT balance FROM partai WHERE uuid = ?";
+
+        try (PreparedStatement ps = DatabaseManager.getConnection().prepareStatement(sql)) {
+            ps.setString(1, uuid.toString());
+            var rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getDouble("balance");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public static List<PartaiData> getAll() {
+        String sql = "SELECT * FROM partai";
+        List<PartaiData> result = new ArrayList<>();
+
+        try (PreparedStatement ps = DatabaseManager.getConnection().prepareStatement(sql);
+                var rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                result.add(new PartaiData(
+                        UUID.fromString(rs.getString("uuid")),
+                        rs.getString("name"),
+                        rs.getString("short_name"),
+                        UUID.fromString(rs.getString("leader_uuid")),
+                        rs.getDouble("balance"),
+                        rs.getInt("reputation"),
+                        rs.getLong("created_at")));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return result;
     }
 }

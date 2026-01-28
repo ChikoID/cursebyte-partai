@@ -6,8 +6,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.cursebyte.plugin.PartaiCore;
+import com.cursebyte.plugin.command.admin.BalanceCommand;
+import com.cursebyte.plugin.command.admin.BubarkanCommand;
 import com.cursebyte.plugin.command.admin.ListCommand;
 import com.cursebyte.plugin.command.admin.ResetCommand;
+import com.cursebyte.plugin.command.admin.SetCommand;
 import com.cursebyte.plugin.utils.MessageUtils;
 
 public class AdminPartaiCommand implements CommandExecutor {
@@ -23,10 +26,10 @@ public class AdminPartaiCommand implements CommandExecutor {
     public AdminPartaiCommand(PartaiCore plugin) {
         this.plugin = plugin;
         this.resetCommand = new ResetCommand(plugin);
-        this.listCommand = new ListCommand(plugin);
-        this.balanceCommand = new BalanceCommand(plugin);
-        this.bubarkanCommand = new BubarkanCommand(plugin);
-        this.setCommand = new SetCommand(plugin);
+        this.listCommand = new ListCommand();
+        this.balanceCommand = new BalanceCommand();
+        this.bubarkanCommand = new BubarkanCommand();
+        this.setCommand = new SetCommand();
     }
 
     @Override
@@ -45,7 +48,7 @@ public class AdminPartaiCommand implements CommandExecutor {
             case "reload" -> {
                 plugin.reloadConfig();
                 MessageUtils.sendSuccess(sender, "Konfigurasi partai telah dimuat ulang.");
-                plugin.getLogger().info("Konfigurasi partai telah dimuat ulang oleh " + sender.getName());
+                plugin.getLogger().info("Konfigurasi partai telah dimuat ulang!");
             }
 
             case "reset" -> resetCommand.execute(sender, args);

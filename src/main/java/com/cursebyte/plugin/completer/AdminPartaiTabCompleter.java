@@ -8,6 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 
 import com.cursebyte.plugin.PartaiCore;
+import com.cursebyte.plugin.modules.partai.PartaiManager;
 
 public class AdminPartaiTabCompleter implements TabCompleter {
     private final PartaiCore plugin;
@@ -33,6 +34,7 @@ public class AdminPartaiTabCompleter implements TabCompleter {
                 String subcommand = args[0].toLowerCase();
                 switch (subcommand) {
                     case "reset", "bubarkan", "balance", "set" -> {
+                        PartaiManager.getAll().forEach(partai -> result.add(partai.getName()));
                     }
                 }
             }
