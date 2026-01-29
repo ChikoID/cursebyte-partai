@@ -21,27 +21,27 @@ public class PartaiTabCompleter implements TabCompleter {
         List<String> result = new ArrayList<>();
         switch (args.length) {
             case 1 -> {
-                result.add("help");
+                result.add("help"); // done
 
-                result.add("buat");
-                result.add("hapus");
-                result.add("edit");
-                result.add("info");
+                result.add("buat"); // done
+                result.add("hapus"); // done
+                result.add("edit"); // done
+                result.add("info"); // done
 
-                result.add("undang");
-                result.add("keluarkan");
-                result.add("promosi");
-                result.add("demosi");
+                result.add("undang"); // done
+                result.add("keluarkan"); // done
+                result.add("promosi"); // done
+                result.add("demosi"); // done
 
-                result.add("keluar");
-                result.add("daftar");
+                result.add("keluar"); // done
+                result.add("daftar"); // done
 
-                result.add("setor");
-                result.add("tarik");
-                result.add("saldo");
+                result.add("setor"); // done
+                result.add("tarik"); // done
+                result.add("saldo"); // done
 
-                result.add("pengumuman");
-                result.add("chat");
+                result.add("pengumuman"); // done
+                result.add("chat"); // done
 
                 result.add("sekutu");
                 result.add("musuh");

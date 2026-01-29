@@ -7,6 +7,8 @@ import com.cursebyte.plugin.command.PartaiCommand;
 import com.cursebyte.plugin.completer.AdminPartaiTabCompleter;
 import com.cursebyte.plugin.completer.PartaiTabCompleter;
 import com.cursebyte.plugin.database.DatabaseManager;
+import com.cursebyte.plugin.listener.PartaiChatListener;
+import com.cursebyte.plugin.modules.member.MemberManager;
 import com.cursebyte.plugin.modules.partai.PartaiManager;
 import com.cursebyte.plugin.modules.relasi.RelasiPartaiManager;
 
@@ -25,6 +27,7 @@ public final class PartaiCore extends JavaPlugin {
 
         DatabaseManager.init(getDataFolder().getAbsolutePath());
         PartaiManager.initTable();
+        MemberManager.initTable();
         RelasiPartaiManager.initTable();
 
         getLogger().info("CursebyteCore berhasil dimuat!");
@@ -45,7 +48,7 @@ public final class PartaiCore extends JavaPlugin {
      * Mendaftarkan Listener
      */
     private void registerListeners() {
-        // getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
+        getServer().getPluginManager().registerEvents(new PartaiChatListener(), this);
     }
 
     /**

@@ -63,7 +63,7 @@ public class BuatCommand {
             return true;
         }
 
-        EconomyService.remove(playerUUID, createCost);
+        EconomyService.withdraw(playerUUID, createCost);
         PartaiManager.create(randomUUID, namaPartai, singkatanPartai, playerUUID);
 
         MessageUtils.sendSuccess(sender, "Partai " + namaPartai + " berhasil dibuat!");

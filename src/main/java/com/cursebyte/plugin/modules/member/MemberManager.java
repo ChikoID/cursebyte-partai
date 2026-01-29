@@ -141,4 +141,15 @@ public class MemberManager {
             e.printStackTrace();
         }
     }
+
+    public static void removeMember(UUID playerUuid) {
+        String sql = "DELETE FROM partai_member WHERE player_uuid = ?";
+
+        try (PreparedStatement ps = DatabaseManager.getConnection().prepareStatement(sql)) {
+            ps.setString(1, playerUuid.toString());
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
