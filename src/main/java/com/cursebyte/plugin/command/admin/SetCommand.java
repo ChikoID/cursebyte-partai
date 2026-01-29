@@ -6,10 +6,8 @@ import java.util.UUID;
 
 import org.bukkit.command.CommandSender;
 
-import com.cursebyte.plugin.modules.citizen.CitizenService;
 import com.cursebyte.plugin.modules.member.MemberService;
 import com.cursebyte.plugin.modules.partai.PartaiManager;
-import com.cursebyte.plugin.modules.partai.PartaiService;
 import com.cursebyte.plugin.utils.MessageUtils;
 
 public class SetCommand {

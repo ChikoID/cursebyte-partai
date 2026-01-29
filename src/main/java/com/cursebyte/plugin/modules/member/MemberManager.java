@@ -105,6 +105,30 @@ public class MemberManager {
         return null;
     }
 
+    public static java.util.List<MemberData> getMembersByPartaiUuid(UUID partaiUuid) {
+        String sql = "SELECT * FROM partai_member WHERE partai_uuid = ?";
+        java.util.List<MemberData> members = new java.util.ArrayList<>();
+
+        try (PreparedStatement ps = DatabaseManager.getConnection().prepareStatement(sql)) {
+            ps.setString(1, partaiUuid.toString());
+            var rs = ps.executeQuery();
+
+            while (rs.next()) {
+                MemberData memberData = new MemberData(
+                        UUID.fromString(rs.getString("player_uuid")),
+                        null, // Nama bisa diisi nanti dari CitizenService
+                        partaiUuid,
+                        rs.getString("jabatan")
+                );
+                members.add(memberData);
+                // Lakukan sesuatu dengan data member
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return members;
+    }
+
     public static void updateRoleInPartai(UUID partaiUuid, UUID memberUuid, String newRole) {
         String sql = "UPDATE partai_member SET jabatan = ? WHERE partai_uuid = ? AND player_uuid = ?";
 

@@ -1,5 +1,6 @@
 package com.cursebyte.plugin.modules.member;
 
+import java.util.List;
 import java.util.UUID;
 
 import com.cursebyte.plugin.modules.citizen.CitizenService;
@@ -35,5 +36,13 @@ public class MemberService {
 
     public static UUID getPartaiUuid(UUID playerUuid) {
         return MemberManager.getPartaiUuid(playerUuid);
+    }
+
+    public static String getRole(UUID playerUuid) {
+        return MemberManager.getRole(playerUuid);
+    }
+
+    public static List<MemberData> getMembersByPartaiUuid(UUID partaiUuid) {
+        return MemberManager.getMembersByPartaiUuid(partaiUuid);
     }
 }

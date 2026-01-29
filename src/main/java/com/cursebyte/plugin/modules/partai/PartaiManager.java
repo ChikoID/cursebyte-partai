@@ -133,6 +133,24 @@ public class PartaiManager {
         }
     }
 
+    public static void updateSimple(UUID uuid, String name, String shortName, UUID leaderUuid) {
+        String sql = """
+                    UPDATE partai
+                    SET name = ?, short_name = ?, leader_uuid = ?
+                    WHERE uuid = ?
+                """;
+
+        try (PreparedStatement ps = DatabaseManager.getConnection().prepareStatement(sql)) {
+            ps.setString(1, name);
+            ps.setString(2, shortName);
+            ps.setString(3, leaderUuid.toString());
+            ps.setString(4, uuid.toString());
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void delete(UUID uuid) {
         String sql = "DELETE FROM partai WHERE uuid = ?";
 
