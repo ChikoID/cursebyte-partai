@@ -57,7 +57,7 @@ public class BuatCommand {
             return true;
         }
 
-        double createCost = plugin.getConfig().getDouble("create-cost", 10000.0);
+        double createCost = plugin.getConfig().getDouble("create-cost");
         if (EconomyService.getBalance(playerUUID) < createCost) {
             MessageUtils.sendError(sender, "Saldo kamu tidak mencukupi untuk membuat partai!");
             return true;
