@@ -13,14 +13,17 @@ import com.cursebyte.plugin.modules.member.MemberData;
 import com.cursebyte.plugin.modules.member.MemberService;
 import com.cursebyte.plugin.modules.partai.PartaiData;
 import com.cursebyte.plugin.modules.partai.PartaiService;
+import com.cursebyte.plugin.modules.reputation.ReputationService;
 import com.cursebyte.plugin.utils.MessageUtils;
 
 public class UndangCommand {
     private final Map<UUID, Map<UUID, Long>> invitations = new HashMap<>();
 
     private final int inviteExpiration;
+    private final PartaiCore plugin;
 
     public UndangCommand(PartaiCore plugin) {
+        this.plugin = plugin;
         this.inviteExpiration = plugin.getConfig().getInt("invite-expiration", 10);
     }
 
@@ -51,6 +54,14 @@ public class UndangCommand {
         MemberData inviterMember = MemberService.getMemberData(inviterUuid);
         if (!inviterMember.getRole().equalsIgnoreCase("ketua")) {
             MessageUtils.sendError(sender, "Hanya ketua partai yang bisa mengundang!");
+            return;
+        }
+
+        double minReputationToJoin = plugin.getConfig().getDouble("min-reputation-to-join", 0.0);
+        double targetReputation = ReputationService.get(targetUuid);
+        if (targetReputation < minReputationToJoin) {
+            MessageUtils.sendError(sender, "Reputasi " + targetName + " belum cukup untuk bergabung ke partai!");
+            MessageUtils.sendInfo(sender, "Minimal reputasi untuk join: " + minReputationToJoin);
             return;
         }
 

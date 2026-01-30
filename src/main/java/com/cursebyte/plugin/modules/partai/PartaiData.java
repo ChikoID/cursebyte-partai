@@ -8,10 +8,10 @@ public class PartaiData {
     private String shortName;
     private UUID leaderUuid;
     private double balance;
-    private int reputation;
+    private double reputation;
     private long createdAt;
 
-    public PartaiData(UUID uuid, String name, String shortName, UUID leaderUuid, double balance, int reputation,
+    public PartaiData(UUID uuid, String name, String shortName, UUID leaderUuid, double balance, double reputation,
             long createdAt) {
         this.uuid = uuid;
         this.name = name;
@@ -42,7 +42,7 @@ public class PartaiData {
         return balance;
     }
 
-    public int getReputation() {
+    public double getReputation() {
         return reputation;
     }
 
@@ -66,7 +66,7 @@ public class PartaiData {
         this.balance = balance;
     }
 
-    public void setReputation(int reputation) {
+    public void setReputation(double reputation) {
         this.reputation = reputation;
     }
 

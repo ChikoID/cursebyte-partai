@@ -1,7 +1,8 @@
 max-members: 50
 invite-expiration: 15 # in minutes
-min-reputation: 100 # Reputasi minimum untuk membuat partai
+min-reputation: 0.9 # Reputasi minimum untuk membuat partai
 create-cost: 10000.0 # Biaya untuk membuat partai
+min-reputation-to-join: 0.7 # Reputasi minimum untuk bergabung ke partai
 
 role:
     ketua:

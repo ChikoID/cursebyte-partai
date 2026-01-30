@@ -72,10 +72,7 @@ public class TarikCommand {
         }
 
         // Proses transaksi
-        if (!EconomyService.deposit(playerUuid, amount)) {
-            MessageUtils.sendError(sender, "Gagal menambahkan saldo ke akun kamu!");
-            return true;
-        }
+        EconomyService.add(playerUuid, amount);
 
         // Update saldo partai
         double newBalance = partai.getBalance() - amount;

@@ -75,7 +75,7 @@ public class InfoCommand {
         MessageUtils.sendRaw(sender, "  Singkatan: " + partai.getShortName());
         MessageUtils.sendRaw(sender, "  Ketua: " + leaderName);
         MessageUtils.sendRaw(sender, "  Balance: " + MessageUtils.formatCurrency(partai.getBalance()));
-        MessageUtils.sendRaw(sender, "  Reputasi: " + partai.getReputation());
+        MessageUtils.sendRaw(sender, "  Reputasi: " + String.format("%.2f", Math.min(partai.getReputation(), 1.0)));
         MessageUtils.sendRaw(sender, "  Jumlah Anggota: " + memberCount);
         MessageUtils.sendRaw(sender, "  Dibuat: " + createdDate);
         MessageUtils.sendRaw(sender, "");

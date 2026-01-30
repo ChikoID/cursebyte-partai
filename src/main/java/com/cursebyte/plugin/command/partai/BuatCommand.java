@@ -52,7 +52,8 @@ public class BuatCommand {
             return true;
         }
 
-        if (!ReputationService.isEligible(playerUUID, plugin.getConfig().getInt("min-reputation"))) {
+        double minReputation = plugin.getConfig().getDouble("min-reputation-to-create");
+        if (ReputationService.get(playerUUID) < minReputation) {
             MessageUtils.sendError(sender, "Reputasi kamu tidak mencukupi untuk membuat partai!");
             return true;
         }
@@ -63,7 +64,7 @@ public class BuatCommand {
             return true;
         }
 
-        EconomyService.withdraw(playerUUID, createCost);
+        EconomyService.remove(playerUUID, createCost);
         PartaiManager.create(randomUUID, namaPartai, singkatanPartai, playerUUID);
 
         MessageUtils.sendSuccess(sender, "Partai " + namaPartai + " berhasil dibuat!");

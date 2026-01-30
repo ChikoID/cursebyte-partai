@@ -44,7 +44,7 @@ public class SetorCommand {
         }
 
         // Validasi: player punya saldo cukup
-        if (!EconomyService.has(playerUuid, amount)) {
+        if (EconomyService.getBalance(playerUuid) < amount) {
             MessageUtils.sendError(sender, "Saldo kamu tidak cukup!");
             MessageUtils.sendInfo(sender, "Saldo: " + MessageUtils.formatCurrency(EconomyService.getBalance(playerUuid)));
             return true;
@@ -58,7 +58,7 @@ public class SetorCommand {
         }
 
         // Proses transaksi
-        if (!EconomyService.withdraw(playerUuid, amount)) {
+        if (!EconomyService.remove(playerUuid, amount)) {
             MessageUtils.sendError(sender, "Gagal memotong saldo kamu!");
             return true;
         }

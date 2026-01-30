@@ -52,7 +52,7 @@ public class ReputasiCommand {
     }
 
     private void displayReputation(CommandSender sender, PartaiData partai) {
-        int reputation = partai.getReputation();
+        double reputation = Math.min(partai.getReputation(), 1.0);
         String tier = getReputationTier(reputation);
         NamedTextColor tierColor = getReputationColor(reputation);
 
@@ -60,7 +60,7 @@ public class ReputasiCommand {
         MessageUtils.sendRaw(sender, "");
         MessageUtils.sendRaw(sender, "  Partai: " + partai.getName() + " (" + partai.getShortName() + ")");
         MessageUtils.sendRaw(sender, "");
-        MessageUtils.sendRaw(sender, "  Reputasi: " + reputation + " poin", tierColor);
+        MessageUtils.sendRaw(sender, "  Reputasi: " + String.format("%.2f", reputation), tierColor);
         MessageUtils.sendRaw(sender, "  Tingkat: " + tier, tierColor);
         MessageUtils.sendRaw(sender, "");
         
@@ -75,9 +75,9 @@ public class ReputasiCommand {
         MessageUtils.sendFooter(sender);
     }
 
-    private void displayReputationBar(CommandSender sender, int reputation) {
+    private void displayReputationBar(CommandSender sender, double reputation) {
         int maxBars = 20;
-        int filledBars = Math.min(maxBars, Math.max(0, reputation / 50)); // 1000 rep = full bar
+        int filledBars = (int) Math.round(Math.min(maxBars, Math.max(0, reputation * maxBars)));
         int emptyBars = maxBars - filledBars;
 
         StringBuilder bar = new StringBuilder("  [");
@@ -97,21 +97,21 @@ public class ReputasiCommand {
         MessageUtils.sendRaw(sender, bar.toString(), getReputationColor(reputation));
     }
 
-    private String getReputationTier(int reputation) {
-        if (reputation >= 1000) return "Legendaris";
-        if (reputation >= 750) return "Terkenal";
-        if (reputation >= 500) return "Terpercaya";
-        if (reputation >= 250) return "Dikenal";
-        if (reputation >= 100) return "Pemula";
-        if (reputation >= 0) return "Baru";
+    private String getReputationTier(double reputation) {
+        if (reputation >= 0.90) return "Legendaris";
+        if (reputation >= 0.75) return "Terkenal";
+        if (reputation >= 0.50) return "Terpercaya";
+        if (reputation >= 0.25) return "Dikenal";
+        if (reputation >= 0.10) return "Pemula";
+        if (reputation >= 0.0) return "Baru";
         return "Tercela";
     }
 
-    private NamedTextColor getReputationColor(int reputation) {
-        if (reputation >= 750) return NamedTextColor.GOLD;
-        if (reputation >= 500) return NamedTextColor.GREEN;
-        if (reputation >= 250) return NamedTextColor.YELLOW;
-        if (reputation >= 0) return NamedTextColor.GRAY;
+    private NamedTextColor getReputationColor(double reputation) {
+        if (reputation >= 0.75) return NamedTextColor.GOLD;
+        if (reputation >= 0.50) return NamedTextColor.GREEN;
+        if (reputation >= 0.25) return NamedTextColor.YELLOW;
+        if (reputation >= 0.0) return NamedTextColor.GRAY;
         return NamedTextColor.RED;
     }
 }

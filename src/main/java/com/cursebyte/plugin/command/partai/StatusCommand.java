@@ -49,7 +49,7 @@ public class StatusCommand {
             MessageUtils.sendRaw(sender, "");
             MessageUtils.sendRaw(sender, "  Nama: " + myPartai.getName());
             MessageUtils.sendRaw(sender, "  Tag: " + myPartai.getShortName());
-            MessageUtils.sendRaw(sender, "  Reputasi: " + myPartai.getReputation());
+            MessageUtils.sendRaw(sender, "  Reputasi: " + formatReputation(myPartai.getReputation()));
             MessageUtils.sendRaw(sender, "");
             MessageUtils.sendInfo(sender, "Gunakan /partai status <nama_partai> untuk cek hubungan dengan partai lain");
             MessageUtils.sendRaw(sender, "");
@@ -100,5 +100,10 @@ public class StatusCommand {
             case "MUSUH" -> "☠";
             default -> "●";
         };
+    }
+
+    private String formatReputation(double reputation) {
+        double clamped = Math.min(reputation, 1.0);
+        return String.format("%.2f", clamped);
     }
 }

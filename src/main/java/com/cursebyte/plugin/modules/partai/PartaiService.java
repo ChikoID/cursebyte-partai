@@ -46,12 +46,13 @@ public class PartaiService {
     /**
      * Update reputation partai dan refresh cache.
      */
-    public static void updateReputation(UUID uuid, int newReputation) {
+        public static void updateReputation(UUID uuid, double newReputation) {
         PartaiData data = getPartai(uuid);
         if (data != null) {
+            double clampedReputation = Math.min(newReputation, 1.0);
             PartaiManager.update(uuid, data.getName(), data.getShortName(), 
-                    data.getLeaderUuid(), data.getBalance(), newReputation);
-            data.setReputation(newReputation);
+                data.getLeaderUuid(), data.getBalance(), clampedReputation);
+            data.setReputation(clampedReputation);
             cache.put(uuid, data);
         }
     }

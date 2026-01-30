@@ -17,7 +17,7 @@ public class PartaiManager {
                         short_name VARCHAR(20) NOT NULL,
                         leader_uuid TEXT NOT NULL,
                         balance DOUBLE DEFAULT 0.0,
-                        reputation INTEGER DEFAULT 0,
+                        reputation DOUBLE DEFAULT 0.0,
                         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                         FOREIGN KEY (leader_uuid) REFERENCES citizenship(uuid)
                     );
@@ -98,7 +98,7 @@ public class PartaiManager {
     public static void create(UUID uuid, String name, String shortName, UUID leaderUuid) {
         String sql = """
                     INSERT INTO partai(uuid, name, short_name, leader_uuid, balance, reputation, created_at)
-                    VALUES(?, ?, ?, ?, 0.0, 0, CURRENT_TIMESTAMP)
+                    VALUES(?, ?, ?, ?, 0.0, 0.0, CURRENT_TIMESTAMP)
                 """;
 
         try (PreparedStatement ps = DatabaseManager.getConnection().prepareStatement(sql)) {
@@ -112,8 +112,8 @@ public class PartaiManager {
         }
     }
 
-    public static void update(UUID uuid, String name, String shortName, UUID leaderUuid, double balance,
-            int reputation) {
+        public static void update(UUID uuid, String name, String shortName, UUID leaderUuid, double balance,
+            double reputation) {
         String sql = """
                     UPDATE partai
                     SET name = ?, short_name = ?, leader_uuid = ?, balance = ?, reputation = ?
@@ -125,7 +125,7 @@ public class PartaiManager {
             ps.setString(2, shortName);
             ps.setString(3, leaderUuid.toString());
             ps.setDouble(4, balance);
-            ps.setInt(5, reputation);
+            ps.setDouble(5, reputation);
             ps.setString(6, uuid.toString());
             ps.executeUpdate();
         } catch (Exception e) {
@@ -186,7 +186,7 @@ public class PartaiManager {
                         rs.getString("short_name"),
                         UUID.fromString(rs.getString("leader_uuid")),
                         rs.getDouble("balance"),
-                        rs.getInt("reputation"),
+                        rs.getDouble("reputation"),
                         rs.getLong("created_at"));
             }
         } catch (Exception e) {
@@ -243,7 +243,7 @@ public class PartaiManager {
                         rs.getString("short_name"),
                         UUID.fromString(rs.getString("leader_uuid")),
                         rs.getDouble("balance"),
-                        rs.getInt("reputation"),
+                        rs.getDouble("reputation"),
                         rs.getLong("created_at")));
             }
         } catch (Exception e) {

@@ -17,8 +17,7 @@ public class CheckCommand {
         double reputasi = ReputationService.get(playerUuid);
         double money = EconomyService.getBalance(playerUuid);
 
-        MessageUtils.sendInfo(sender, "Reputasi :" + reputasi);
-        MessageUtils.sendInfo(sender, "Saldo :" + money);
-
+        MessageUtils.sendInfo(sender, "Reputasi: " + reputasi);
+        MessageUtils.sendInfo(sender, "Saldo: " + money);
     }
 }
