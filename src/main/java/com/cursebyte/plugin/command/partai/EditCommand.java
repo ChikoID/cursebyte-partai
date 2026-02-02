@@ -11,13 +11,19 @@ import com.cursebyte.plugin.utils.MessageUtils;
 
 public class EditCommand {
     public void execute(CommandSender sender, String[] args) {
+        if (args.length < 2) {
+            MessageUtils.sendError(sender, "Usage: /partai edit <nama_baru> [singkatan_baru]");
+        }
+        
         Player player = (Player) sender;
         UUID playerUUID = player.getUniqueId();
 
-        UUID partaUuid = MemberService.getPartaiUuid(playerUUID);
-        if (partaUuid == null) {
-            MessageUtils.sendError(sender, "Kamu tidak memiliki partai!");
+        if (!PartaiManager.existsByUuid(playerUUID)) {
+            MessageUtils.sendError(sender, "Anda tidak memiliki partai!");
+            return;
         }
+
+        UUID partaiUuid = MemberService.getPartaiUuid(playerUUID);
 
         String newName = args[1];
         String singkatanPartai = args.length >= 3 ? args[2]
@@ -25,13 +31,15 @@ public class EditCommand {
 
         if (PartaiManager.existsByName(newName)) {
             MessageUtils.sendError(sender, "Nama partai sudah digunakan!");
+            return;
         }
 
         if (PartaiManager.existsByShortName(singkatanPartai)) {
             MessageUtils.sendError(sender, "Singkatan partai sudah digunakan!");
+            return;
         }
 
-        PartaiManager.updateSimple(partaUuid, newName, singkatanPartai, playerUUID);
+        PartaiManager.updateSimple(partaiUuid, newName, singkatanPartai, playerUUID);
         MessageUtils.sendSuccess(sender, "Partai berhasil diubah!");
     }
 }

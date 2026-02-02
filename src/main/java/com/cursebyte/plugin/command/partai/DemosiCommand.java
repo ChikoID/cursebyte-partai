@@ -1,10 +1,10 @@
 package com.cursebyte.plugin.command.partai;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -12,6 +12,7 @@ import com.cursebyte.plugin.PartaiCore;
 import com.cursebyte.plugin.modules.member.MemberData;
 import com.cursebyte.plugin.modules.member.MemberService;
 import com.cursebyte.plugin.utils.MessageUtils;
+import com.cursebyte.plugin.utils.PlayerUtils;
 
 public class DemosiCommand {
     private final Map<String, Integer> roleLevel = new HashMap<>();
@@ -34,12 +35,17 @@ public class DemosiCommand {
             return true;
         }
 
-        String targetName = args[1];
-        String newRole = args[2].toLowerCase();
+        String targetName = String.join(" ", Arrays.copyOfRange(args, 1, args.length - 1)).trim();
+        String newRole = args[args.length - 1].toLowerCase();
+        if (targetName.isEmpty()) {
+            MessageUtils.sendError(sender, "Usage: /partai demosi <playername> <jabatan_baru>");
+            MessageUtils.sendInfo(sender, "Jabatan: anggota, sekretaris, bendahara, wakil_ketua");
+            return true;
+        }
         UUID playerUuid = player.getUniqueId();
 
         // Validasi target online
-        Player targetPlayer = Bukkit.getPlayer(targetName);
+        Player targetPlayer = PlayerUtils.findOnlinePlayerByName(targetName);
         if (targetPlayer == null) {
             MessageUtils.sendError(sender, "Player '" + targetName + "' tidak sedang online!");
             return true;

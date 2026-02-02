@@ -1,0 +1,24 @@
+YANG SUDAH DI FIX / CHECK :
+- help
+- buat
+- hapus
+- edit
+- info
+
+YANG BELUM DI FIX / CHECK :
+- undang
+- terima
+- tolak
+- keluarkan
+- promosi
+- demosi
+- keluar
+- daftar
+- setor
+- tarik
+- saldo
+- pengumuman
+- chat
+- sekutu
+- musuh
+- reputasi

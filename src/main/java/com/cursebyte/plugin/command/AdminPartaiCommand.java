@@ -39,6 +39,11 @@ public class AdminPartaiCommand implements CommandExecutor {
             return true;
         }
 
+        if (args.length == 0) {
+            MessageUtils.sendError(sender, "Gunakan: /adminpartai <subcommand>");
+            return true;
+        }
+
         Player player = (Player) sender;
         if (player.hasPermission("partai.admin") == false) {
             MessageUtils.sendError(sender, "Kamu tidak memiliki izin untuk menggunakan perintah ini.");

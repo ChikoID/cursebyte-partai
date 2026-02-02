@@ -118,8 +118,7 @@ public class MemberManager {
                         UUID.fromString(rs.getString("player_uuid")),
                         null, // Nama bisa diisi nanti dari CitizenService
                         partaiUuid,
-                        rs.getString("jabatan")
-                );
+                        rs.getString("jabatan"));
                 members.add(memberData);
                 // Lakukan sesuatu dengan data member
             }
@@ -147,6 +146,17 @@ public class MemberManager {
 
         try (PreparedStatement ps = DatabaseManager.getConnection().prepareStatement(sql)) {
             ps.setString(1, playerUuid.toString());
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void removeAllMembers(UUID partaiUuid) {
+        String sql = "DELETE FROM partai_member WHERE partai_uuid = ?";
+
+        try (PreparedStatement ps = DatabaseManager.getConnection().prepareStatement(sql)) {
+            ps.setString(1, partaiUuid.toString());
             ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();

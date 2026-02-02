@@ -8,6 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 
 import com.cursebyte.plugin.PartaiCore;
+import com.cursebyte.plugin.modules.citizen.CitizenService;
 import com.cursebyte.plugin.modules.partai.PartaiManager;
 
 public class AdminPartaiTabCompleter implements TabCompleter {
@@ -45,7 +46,12 @@ public class AdminPartaiTabCompleter implements TabCompleter {
                         result.add("<jumlah>");
                     }
                     case "set" -> {
-                        plugin.getServer().getOnlinePlayers().forEach(player -> result.add(player.getName()));
+                        plugin.getServer().getOnlinePlayers().forEach(player -> {
+                            var profile = CitizenService.getProfile(player.getUniqueId());
+                            if (profile != null) {
+                                result.add(profile.getFullName());
+                            }
+                        });
                     }
                 }
             }

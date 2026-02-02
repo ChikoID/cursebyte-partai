@@ -8,6 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 
 import com.cursebyte.plugin.PartaiCore;
+import com.cursebyte.plugin.modules.citizen.CitizenService;
 
 public class PartaiTabCompleter implements TabCompleter {
     private final PartaiCore plugin;
@@ -25,23 +26,25 @@ public class PartaiTabCompleter implements TabCompleter {
 
                 result.add("buat"); // done
                 result.add("hapus"); // done
-                result.add("edit"); // done
-                result.add("info"); // done
+                result.add("edit");
+                result.add("info");
 
-                result.add("undang"); // done
-                result.add("keluarkan"); // done
-                result.add("promosi"); // done
-                result.add("demosi"); // done
+                result.add("undang");
+                result.add("terima");
+                result.add("tolak");
+                result.add("keluarkan");
+                result.add("promosi");
+                result.add("demosi");
 
-                result.add("keluar"); // done
-                result.add("daftar"); // done
+                result.add("keluar");
+                result.add("daftar");
 
-                result.add("setor"); // done
-                result.add("tarik"); // done
-                result.add("saldo"); // done
+                result.add("setor");
+                result.add("tarik");
+                result.add("saldo");
 
-                result.add("pengumuman"); // done
-                result.add("chat"); // done
+                result.add("pengumuman");
+                result.add("chat");
 
                 result.add("sekutu");
                 result.add("musuh");
@@ -63,7 +66,12 @@ public class PartaiTabCompleter implements TabCompleter {
                         result.add("<jumlah>");
                     }
                     case "undang", "keluarkan", "promosi", "demosi" -> {
-                        plugin.getServer().getOnlinePlayers().forEach(player -> result.add(player.getName()));
+                        plugin.getServer().getOnlinePlayers().forEach(player -> {
+                            var profile = CitizenService.getProfile(player.getUniqueId());
+                            if (profile != null) {
+                                result.add(profile.getFullName());
+                            }
+                        });
                     }
                     case "pengumuman" -> {
                         result.add("<pesan>");

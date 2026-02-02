@@ -1,8 +1,8 @@
 package com.cursebyte.plugin.command.partai;
 
+import java.util.Arrays;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -12,6 +12,7 @@ import com.cursebyte.plugin.modules.member.MemberService;
 import com.cursebyte.plugin.modules.partai.PartaiData;
 import com.cursebyte.plugin.modules.partai.PartaiService;
 import com.cursebyte.plugin.utils.MessageUtils;
+import com.cursebyte.plugin.utils.PlayerUtils;
 
 public class KeluarkanCommand {
     public boolean execute(CommandSender sender, String[] args) {
@@ -27,9 +28,13 @@ public class KeluarkanCommand {
             return true;
         }
 
-        String targetName = args[1];
+        String targetName = String.join(" ", Arrays.copyOfRange(args, 1, args.length)).trim();
+        if (targetName.isEmpty()) {
+            MessageUtils.sendError(sender, "Usage: /partai keluarkan <playername>");
+            return true;
+        }
         UUID playerUuid = player.getUniqueId();
-        Player targetPlayer = Bukkit.getPlayer(targetName);
+        Player targetPlayer = PlayerUtils.findOnlinePlayerByName(targetName);
 
         if (targetPlayer == null) {
             MessageUtils.sendError(sender, "Player '" + targetName + "' tidak ditemukan atau sedang offline!");

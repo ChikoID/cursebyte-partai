@@ -10,66 +10,51 @@ import org.bukkit.entity.Player;
 
 import com.cursebyte.plugin.modules.member.MemberManager;
 import com.cursebyte.plugin.modules.partai.PartaiData;
+import com.cursebyte.plugin.modules.partai.PartaiManager;
 import com.cursebyte.plugin.modules.partai.PartaiService;
 import com.cursebyte.plugin.utils.MessageUtils;
 
 public class InfoCommand {
 
     public boolean execute(CommandSender sender, String[] args) {
-        if (!(sender instanceof Player)) {
-            MessageUtils.sendError(sender, "Command ini hanya bisa dipakai oleh player!");
-            return true;
-        }
-
         Player player = (Player) sender;
         UUID playerUuid = player.getUniqueId();
 
-        // Jika ada argument, ambil info partai berdasarkan nama
         PartaiData partaiData;
-        if (args.length >= 2) {
-            String partaiName = String.join(" ", java.util.Arrays.copyOfRange(args, 1, args.length));
-            partaiData = PartaiService.getPartaiByName(partaiName);
-            if (partaiData == null) {
-                MessageUtils.sendError(sender, "Partai '" + partaiName + "' tidak ditemukan!");
-                return true;
-            }
-        } else {
-            // Ambil info partai pemain itu sendiri
+
+        if (args.length < 2) {
+            // Get player's own party
             UUID partaiUuid = MemberManager.getPartaiUuid(playerUuid);
             if (partaiUuid == null) {
-                MessageUtils.sendError(sender, "Kamu belum bergabung dengan partai!");
+                MessageUtils.sendError(sender, "Anda tidak memiliki partai!");
                 return true;
             }
             partaiData = PartaiService.getPartai(partaiUuid);
-            if (partaiData == null) {
-                MessageUtils.sendError(sender, "Data partai tidak ditemukan!");
+        } else {
+            // Get party by name
+            String partaiName = String.join(" ", java.util.Arrays.copyOfRange(args, 1, args.length));
+            if (!PartaiManager.existsByName(partaiName)) {
+                MessageUtils.sendError(sender, "Partai dengan nama tersebut tidak ditemukan!");
                 return true;
             }
+            partaiData = PartaiService.getPartaiByName(partaiName);
         }
 
-        // Display party info
         displayPartaiInfo(sender, partaiData);
         return true;
     }
 
-    private void displayPartaiInfo(CommandSender sender, PartaiData partai) {
+    public void displayPartaiInfo(CommandSender sender, PartaiData partai) {
         MessageUtils.sendHeader(sender, partai.getName());
-
-        // Format creation date
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-        String createdDate = sdf.format(new Date(partai.getCreatedAt()));
-
-        // Get leader name
+        String createdDate = sdf.format(new Date(partai.getCreatedAt() * 1000));
         String leaderName = "Unknown";
         Player leader = Bukkit.getPlayer(partai.getLeaderUuid());
         if (leader != null) {
             leaderName = leader.getName();
         }
 
-        // Get member count
         int memberCount = MemberManager.getMembersByPartaiUuid(partai.getUuid()).size();
-
-        // Display info
         MessageUtils.sendRaw(sender, "");
         MessageUtils.sendRaw(sender, "  Nama: " + partai.getName());
         MessageUtils.sendRaw(sender, "  Singkatan: " + partai.getShortName());

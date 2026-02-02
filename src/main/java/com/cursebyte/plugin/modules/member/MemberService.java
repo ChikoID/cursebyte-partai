@@ -12,6 +12,14 @@ public class MemberService {
         return MemberManager.getUuidByName(fullName);
     }
 
+    public static void removeAllMembers(UUID partaiUuid) {
+        MemberManager.removeAllMembers(partaiUuid);
+
+        // Invalidate cache untuk semua member partai ini
+        // Karena tidak ada registry per-partai, biarkan lazy refresh handle stale
+        // entries
+    }
+
     /**
      * Gabungkan data citizen dengan role partai.
      */

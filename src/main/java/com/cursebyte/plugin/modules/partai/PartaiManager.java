@@ -34,7 +34,7 @@ public class PartaiManager {
      * Cek keberadaan partai berdasarkan UUID (alias untuk isPartai).
      */
     public static boolean existsByUuid(UUID uuid) {
-        String sql = "SELECT 1 FROM partai WHERE uuid = ? LIMIT 1";
+        String sql = "SELECT 1 FROM partai WHERE leader_uuid = ? LIMIT 1";
 
         try (PreparedStatement ps = DatabaseManager.getConnection().prepareStatement(sql)) {
             ps.setString(1, uuid.toString());
@@ -87,22 +87,19 @@ public class PartaiManager {
     }
 
     /**
-     * Membuat partai baru dengan data yang diberikan.
+     * Membuat partai baru
      * 
-     * @param uuid       UUID partai - Random
+     * @param uuid       UUID partai yang sudah di-generate
      * @param name       Nama partai
      * @param shortName  Singkatan partai
-     * @param leaderUuid UUID pemimpin partai
+     * @param leaderUuid UUID leader
      */
-
     public static void create(UUID uuid, String name, String shortName, UUID leaderUuid) {
-        String sql = """
-                    INSERT INTO partai(uuid, name, short_name, leader_uuid, balance, reputation, created_at)
-                    VALUES(?, ?, ?, ?, 0.0, 0.0, CURRENT_TIMESTAMP)
-                """;
+        String sql = "INSERT INTO partai (uuid, name, short_name, leader_uuid, balance, reputation, created_at) " +
+                "VALUES (?, ?, ?, ?, 0, 0, datetime('now'))";
 
         try (PreparedStatement ps = DatabaseManager.getConnection().prepareStatement(sql)) {
-            ps.setString(1, uuid.toString());
+            ps.setString(1, uuid.toString()); // ← GUNAKAN PARAMETER, BUKAN UUID.randomUUID()
             ps.setString(2, name);
             ps.setString(3, shortName);
             ps.setString(4, leaderUuid.toString());
@@ -112,7 +109,7 @@ public class PartaiManager {
         }
     }
 
-        public static void update(UUID uuid, String name, String shortName, UUID leaderUuid, double balance,
+    public static void update(UUID uuid, String name, String shortName, UUID leaderUuid, double balance,
             double reputation) {
         String sql = """
                     UPDATE partai
@@ -170,6 +167,30 @@ public class PartaiManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static PartaiData getByPlayerUuid(UUID playerUuid) {
+        String sql = "SELECT * FROM partai WHERE leader_uuid = ?";
+
+        try (PreparedStatement ps = DatabaseManager.getConnection().prepareStatement(sql)) {
+            ps.setString(1, playerUuid.toString());
+            var rs = ps.executeQuery();
+
+            if (rs.next()) {
+                // Process result if needed
+                return new PartaiData(
+                        UUID.fromString(rs.getString("uuid")),
+                        rs.getString("name"),
+                        rs.getString("short_name"),
+                        UUID.fromString(rs.getString("leader_uuid")),
+                        rs.getDouble("balance"),
+                        rs.getDouble("reputation"),
+                        rs.getLong("created_at"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public static PartaiData get(UUID uuid) {

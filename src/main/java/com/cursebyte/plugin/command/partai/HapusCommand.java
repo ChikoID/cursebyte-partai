@@ -10,8 +10,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.cursebyte.plugin.PartaiCore;
-import com.cursebyte.plugin.modules.member.MemberService;
 import com.cursebyte.plugin.modules.member.MemberData;
+import com.cursebyte.plugin.modules.member.MemberService;
+import com.cursebyte.plugin.modules.partai.PartaiManager;
 import com.cursebyte.plugin.modules.partai.PartaiService;
 import com.cursebyte.plugin.utils.MessageUtils;
 
@@ -28,17 +29,22 @@ public class HapusCommand {
         Player player = (Player) sender;
         UUID playerUUID = player.getUniqueId();
 
-        if (MemberService.getPartaiUuid(playerUUID) == null) {
-            Map<String, String> placeholders = new HashMap<>();
-            MessageUtils.sendError(sender, "Anda tidak memiliki partai!" + placeholders);
+        if (!PartaiManager.existsByUuid(playerUUID)) {
+            MessageUtils.sendError(sender, "Anda tidak memiliki partai!");
             return;
         }
 
-        String partaiName = PartaiService.getPartai(playerUUID).getName();
+        var partaiData = PartaiService.getPartaiByPlayerUuid(playerUUID);
+        if (partaiData == null) {
+            MessageUtils.sendError(sender, "Data partai tidak ditemukan!");
+            return;
+        }
+
+        String partaiName = partaiData.getName();
         String playerName = player.getName();
 
         String playerRank = MemberService.getRole(playerUUID);
-        if (!"ketua".equals(playerRank)) {
+        if (playerRank == null || !"ketua".equals(playerRank)) {
             MessageUtils.sendError(sender, "Hanya ketua partai yang bisa menghapus partai!");
             return;
         }
@@ -62,10 +68,15 @@ public class HapusCommand {
             return;
         }
 
-        PartaiService.deletePartai(MemberService.getPartaiUuid(playerUUID));
+        
+        UUID partaiUuid = MemberService.getPartaiUuid(playerUUID);
+        
+        List<MemberData> members = MemberService.getMembersByPartaiUuid(partaiUuid);
+        
+        MemberService.removeAllMembers(partaiUuid);
+        PartaiService.deletePartai(partaiUuid);
         SaveCode.remove(playerName);
 
-        List<MemberData> members = MemberService.getMembersByPartaiUuid(MemberService.getPartaiUuid(playerUUID));
         for (MemberData member : members) {
             Player memberPlayer = plugin.getServer().getPlayer(member.getPlayerUuid());
             if (memberPlayer != null && memberPlayer.isOnline()) {

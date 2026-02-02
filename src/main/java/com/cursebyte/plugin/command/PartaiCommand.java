@@ -26,6 +26,8 @@ import com.cursebyte.plugin.command.partai.SekutuCommand;
 import com.cursebyte.plugin.command.partai.SetorCommand;
 import com.cursebyte.plugin.command.partai.StatusCommand;
 import com.cursebyte.plugin.command.partai.TarikCommand;
+import com.cursebyte.plugin.command.partai.TerimaCommand;
+import com.cursebyte.plugin.command.partai.TolakCommand;
 import com.cursebyte.plugin.command.partai.UndangCommand;
 import com.cursebyte.plugin.utils.MessageUtils;
 
@@ -40,6 +42,8 @@ public class PartaiCommand implements CommandExecutor {
     private final EditCommand editCommand;
     private final InfoCommand infoCommand;
     private final UndangCommand undangCommand;
+    private final TerimaCommand terimaCommand;
+    private final TolakCommand tolakCommand;
     private final KeluarkanCommand keluarkanCommand;
     private final DaftarCommand daftarCommand;
     private final DemosiCommand demosiCommand;
@@ -64,6 +68,8 @@ public class PartaiCommand implements CommandExecutor {
         this.editCommand = new EditCommand();
         this.infoCommand = new InfoCommand();
         this.undangCommand = new UndangCommand(plugin);
+        this.terimaCommand = new TerimaCommand(plugin, undangCommand);
+        this.tolakCommand = new TolakCommand(plugin, undangCommand);
         this.keluarkanCommand = new KeluarkanCommand();
         this.daftarCommand = new DaftarCommand();
         this.demosiCommand = new DemosiCommand(plugin);
@@ -88,8 +94,10 @@ public class PartaiCommand implements CommandExecutor {
             return true;
         }
 
-        if (args.length == 0)
+        if (args.length == 0) {
+            helpCommand.execute(sender, args);
             return true;
+        }
 
         switch (args[0].toLowerCase()) {
             case "help" -> helpCommand.execute(sender, args);
@@ -99,6 +107,8 @@ public class PartaiCommand implements CommandExecutor {
             case "edit" -> editCommand.execute(sender, args);
             case "info" -> infoCommand.execute(sender, args);
             case "undang" -> undangCommand.execute(sender, args);
+            case "terima" -> terimaCommand.execute(sender, args);
+            case "tolak" -> tolakCommand.execute(sender, args);
             case "keluarkan" -> keluarkanCommand.execute(sender, args);
             case "daftar" -> daftarCommand.execute(sender, args);
             case "demosi" -> demosiCommand.execute(sender, args);

@@ -22,6 +22,18 @@ public class PartaiService {
         return data;
     }
 
+    public static PartaiData getPartaiByPlayerUuid(UUID playerUuid) {
+        if (cache.containsKey(playerUuid)) {
+            return cache.get(playerUuid);
+        }
+
+        PartaiData data = PartaiManager.getByPlayerUuid(playerUuid);
+        if (data != null) {
+            cache.put(playerUuid, data);
+        }
+        return data;
+    }
+
     /**
      * Ambil partai berdasarkan nama.
      */
@@ -46,13 +58,12 @@ public class PartaiService {
     /**
      * Update reputation partai dan refresh cache.
      */
-        public static void updateReputation(UUID uuid, double newReputation) {
+    public static void updateReputation(UUID uuid, int newReputation) {
         PartaiData data = getPartai(uuid);
         if (data != null) {
-            double clampedReputation = Math.min(newReputation, 1.0);
             PartaiManager.update(uuid, data.getName(), data.getShortName(), 
-                data.getLeaderUuid(), data.getBalance(), clampedReputation);
-            data.setReputation(clampedReputation);
+                data.getLeaderUuid(), data.getBalance(), newReputation);
+            data.setReputation(newReputation);
             cache.put(uuid, data);
         }
     }

@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 
 import com.cursebyte.plugin.PartaiCore;
 import com.cursebyte.plugin.modules.economy.EconomyService;
+import com.cursebyte.plugin.modules.member.MemberManager;
 import com.cursebyte.plugin.modules.partai.PartaiManager;
 import com.cursebyte.plugin.modules.reputation.ReputationService;
 import com.cursebyte.plugin.utils.MessageUtils;
@@ -19,11 +20,6 @@ public class BuatCommand {
     }
 
     public boolean execute(CommandSender sender, String[] args) {
-        if (!(sender instanceof Player)) {
-            MessageUtils.sendError(sender, "Command ini hanya bisa dipakai oleh player!");
-            return true;
-        }
-
         Player player = (Player) sender;
 
         if (args.length < 2) {
@@ -66,6 +62,7 @@ public class BuatCommand {
 
         EconomyService.remove(playerUUID, createCost);
         PartaiManager.create(randomUUID, namaPartai, singkatanPartai, playerUUID);
+        MemberManager.addMember(playerUUID, randomUUID, "ketua");
 
         MessageUtils.sendSuccess(sender, "Partai " + namaPartai + " berhasil dibuat!");
         return true;
