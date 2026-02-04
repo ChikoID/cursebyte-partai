@@ -8,7 +8,10 @@ import org.bukkit.entity.Player;
 import com.cursebyte.plugin.PartaiCore;
 import com.cursebyte.plugin.command.admin.BalanceCommand;
 import com.cursebyte.plugin.command.admin.BubarkanCommand;
+import com.cursebyte.plugin.command.admin.KickCommand;
+import com.cursebyte.plugin.command.admin.LeaderCommand;
 import com.cursebyte.plugin.command.admin.ListCommand;
+import com.cursebyte.plugin.command.admin.ReputationCommand;
 import com.cursebyte.plugin.command.admin.ResetCommand;
 import com.cursebyte.plugin.command.admin.SetCommand;
 import com.cursebyte.plugin.utils.MessageUtils;
@@ -21,6 +24,9 @@ public class AdminPartaiCommand implements CommandExecutor {
     private final BalanceCommand balanceCommand;
     private final BubarkanCommand bubarkanCommand;
     private final SetCommand setCommand;
+    private final KickCommand kickCommand;
+    private final ReputationCommand reputationCommand;
+    private final LeaderCommand leaderCommand;
 
 
     public AdminPartaiCommand(PartaiCore plugin) {
@@ -30,17 +36,15 @@ public class AdminPartaiCommand implements CommandExecutor {
         this.balanceCommand = new BalanceCommand();
         this.bubarkanCommand = new BubarkanCommand();
         this.setCommand = new SetCommand();
+        this.kickCommand = new KickCommand();
+        this.reputationCommand = new ReputationCommand();
+        this.leaderCommand = new LeaderCommand();
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (!(sender instanceof Player)) {
             MessageUtils.sendError(sender, "Perintah ini hanya bisa digunakan oleh player!");
-            return true;
-        }
-
-        if (args.length == 0) {
-            MessageUtils.sendError(sender, "Gunakan: /adminpartai <subcommand>");
             return true;
         }
 
@@ -61,6 +65,9 @@ public class AdminPartaiCommand implements CommandExecutor {
             case "balance" -> balanceCommand.execute(sender, args);
             case "bubarkan" -> bubarkanCommand.execute(sender, args);
             case "set" -> setCommand.execute(sender, args);
+            case "kick" -> kickCommand.execute(sender, args);
+            case "reputation" -> reputationCommand.execute(sender, args);
+            case "leader" -> leaderCommand.execute(sender, args);
             default -> MessageUtils.sendError(sender, "Perintah admin partai tidak dikenal.");
         }
 

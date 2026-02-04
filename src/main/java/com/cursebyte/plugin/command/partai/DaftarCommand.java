@@ -7,12 +7,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.cursebyte.plugin.modules.citizen.CitizenService;
 import com.cursebyte.plugin.modules.member.MemberData;
 import com.cursebyte.plugin.modules.member.MemberManager;
 import com.cursebyte.plugin.modules.member.MemberService;
 import com.cursebyte.plugin.modules.partai.PartaiData;
 import com.cursebyte.plugin.modules.partai.PartaiService;
 import com.cursebyte.plugin.utils.MessageUtils;
+
 import net.kyori.adventure.text.format.NamedTextColor;
 
 public class DaftarCommand {
@@ -77,7 +79,9 @@ public class DaftarCommand {
             for (MemberData member : roleMembers) {
                 Player p = Bukkit.getPlayer(member.getPlayerUuid());
                 String status = (p != null && p.isOnline()) ? "●" : "○";
-                String name = (p != null) ? p.getName() : member.getPlayerUuid().toString();
+                
+                var profile = CitizenService.getProfile(member.getPlayerUuid());
+                String name = (profile != null) ? profile.getFullName() : member.getPlayerUuid().toString();
 
                 MessageUtils.sendRaw(sender, "    " + status + " " + name,
                         (p != null && p.isOnline()) ? NamedTextColor.GREEN : NamedTextColor.GRAY);

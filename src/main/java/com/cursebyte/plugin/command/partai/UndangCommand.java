@@ -70,7 +70,8 @@ public class UndangCommand {
             return;
         }
 
-        if (MemberService.getMemberData(targetUuid) != null) {
+        UUID targetPartaiUuid = MemberService.getPartaiUuid(targetUuid);
+        if (targetPartaiUuid != null) {
             MessageUtils.sendError(sender, targetName + " sudah bergabung dengan partai!");
             return;
         }
@@ -81,6 +82,7 @@ public class UndangCommand {
             long elapsed = System.currentTimeMillis() - targetInvites.get(inviterPartaiUuid);
             if (elapsed < inviteExpiration * 60 * 1000) {
                 MessageUtils.sendError(sender, targetName + " sudah punya undangan dari partaimu!");
+                return;
             } else {
                 targetInvites.remove(inviterPartaiUuid);
             }

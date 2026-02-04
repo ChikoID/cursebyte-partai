@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import com.cursebyte.plugin.PartaiCore;
 import com.cursebyte.plugin.modules.economy.EconomyService;
 import com.cursebyte.plugin.modules.member.MemberManager;
+import com.cursebyte.plugin.modules.member.MemberService;
 import com.cursebyte.plugin.modules.partai.PartaiManager;
 import com.cursebyte.plugin.modules.reputation.ReputationService;
 import com.cursebyte.plugin.utils.MessageUtils;
@@ -33,8 +34,10 @@ public class BuatCommand {
         UUID playerUUID = player.getUniqueId();
         UUID randomUUID = UUID.randomUUID();
 
-        if (PartaiManager.existsByUuid(playerUUID)) {
-            MessageUtils.sendError(sender, "Kamu sudah memiliki partai!");
+        // Validasi: player sudah bergabung dengan partai?
+        UUID existingPartaiUuid = MemberService.getPartaiUuid(playerUUID);
+        if (existingPartaiUuid != null) {
+            MessageUtils.sendError(sender, "Kamu sudah bergabung dengan partai!");
             return true;
         }
 

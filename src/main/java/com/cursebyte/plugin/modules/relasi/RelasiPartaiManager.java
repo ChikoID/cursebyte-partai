@@ -60,4 +60,23 @@ public class RelasiPartaiManager {
         
         return null;
     }
+
+    /**
+     * Hapus semua relasi yang melibatkan partai tertentu
+     * (baik sebagai partai_uuid maupun target_partai_uuid)
+     */
+    public static void deleteByPartai(UUID partaiUuid) {
+        String sql = """
+                    DELETE FROM relasi_partai
+                    WHERE partai_uuid = ? OR target_partai_uuid = ?
+                """;
+
+        try (var ps = DatabaseManager.getConnection().prepareStatement(sql)) {
+            ps.setString(1, partaiUuid.toString());
+            ps.setString(2, partaiUuid.toString());
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

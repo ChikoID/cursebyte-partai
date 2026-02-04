@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 
 import com.cursebyte.plugin.PartaiCore;
 import com.cursebyte.plugin.modules.member.MemberData;
+import com.cursebyte.plugin.modules.member.MemberManager;
 import com.cursebyte.plugin.modules.member.MemberService;
 import com.cursebyte.plugin.utils.MessageUtils;
 import com.cursebyte.plugin.utils.PlayerUtils;
@@ -35,19 +36,33 @@ public class DemosiCommand {
             return true;
         }
 
-        String targetName = String.join(" ", Arrays.copyOfRange(args, 1, args.length - 1)).trim();
-        String newRole = args[args.length - 1].toLowerCase();
-        if (targetName.isEmpty()) {
-            MessageUtils.sendError(sender, "Usage: /partai demosi <playername> <jabatan_baru>");
-            MessageUtils.sendInfo(sender, "Jabatan: anggota, sekretaris, bendahara, wakil_ketua");
-            return true;
-        }
         UUID playerUuid = player.getUniqueId();
 
-        // Validasi target online
-        Player targetPlayer = PlayerUtils.findOnlinePlayerByName(targetName);
-        if (targetPlayer == null) {
-            MessageUtils.sendError(sender, "Player '" + targetName + "' tidak sedang online!");
+        // Coba cari player dari kombinasi nama terpanjang ke terpendek
+        Player targetPlayer = null;
+        String newRole = null;
+        String targetName = null;
+
+        for (int i = args.length - 1; i >= 2; i--) {
+            String candidateName = String.join(" ", Arrays.copyOfRange(args, 1, i)).trim();
+            String candidateRole = args[i].toLowerCase();
+            
+            // Validasi role dulu
+            if (roleLevel.containsKey(candidateRole)) {
+                Player candidate = PlayerUtils.findOnlinePlayerByName(candidateName);
+                if (candidate != null) {
+                    targetPlayer = candidate;
+                    targetName = candidateName;
+                    newRole = candidateRole;
+                    break;
+                }
+            }
+        }
+
+        if (targetPlayer == null || newRole == null) {
+            MessageUtils.sendError(sender, "Player tidak ditemukan atau jabatan tidak valid!");
+            MessageUtils.sendInfo(sender, "Usage: /partai demosi <playername> <jabatan_baru>");
+            MessageUtils.sendInfo(sender, "Jabatan: anggota, sekretaris, bendahara, wakil_ketua");
             return true;
         }
 
@@ -104,6 +119,15 @@ public class DemosiCommand {
             return true;
         }
 
+        // Cek apakah role baru punya slot tersedia
+        int maxSlot = getMaxSlotForRole(newRole);
+        int currentCount = MemberManager.countMembersByRole(playerPartaiUuid, newRole);
+        
+        if (currentCount >= maxSlot) {
+            MessageUtils.sendError(sender, "Slot jabatan " + newRole + " sudah penuh! (" + currentCount + "/" + maxSlot + ")");
+            return true;
+        }
+
         // Update role di database
         MemberService.updateRoleInPartai(targetUuid, playerPartaiUuid, newRole);
 
@@ -112,5 +136,16 @@ public class DemosiCommand {
         MessageUtils.sendWarning(targetPlayer, "Kamu didemosikan menjadi " + newRole + " oleh " + player.getName());
 
         return true;
+    }
+
+    private static int getMaxSlotForRole(String role) {
+        return switch (role.toLowerCase()) {
+            case "ketua" -> 1;
+            case "wakil_ketua" -> 1;
+            case "bendahara" -> 1;
+            case "sekretaris" -> 2;
+            case "anggota" -> 44;
+            default -> 0;
+        };
     }
 }

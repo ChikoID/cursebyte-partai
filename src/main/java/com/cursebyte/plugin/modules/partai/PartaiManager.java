@@ -7,8 +7,23 @@ import java.util.List;
 import java.util.UUID;
 
 import com.cursebyte.plugin.database.DatabaseManager;
+import com.cursebyte.plugin.modules.member.MemberManager;
+import com.cursebyte.plugin.modules.relasi.RelasiPartaiManager;
 
 public class PartaiManager {
+    /**
+     * Clamp reputation antara 0.0 dan 1.0
+     */
+    public static double clampReputation(double value) {
+        if (value > 1.0) {
+            return 1.0;
+        }
+        if (value < 0.0) {
+            return 0.0;
+        }
+        return value;
+    }
+
     public static void initTable() {
         String sql = """
                     CREATE TABLE IF NOT EXISTS partai (
@@ -86,20 +101,12 @@ public class PartaiManager {
         }
     }
 
-    /**
-     * Membuat partai baru
-     * 
-     * @param uuid       UUID partai yang sudah di-generate
-     * @param name       Nama partai
-     * @param shortName  Singkatan partai
-     * @param leaderUuid UUID leader
-     */
     public static void create(UUID uuid, String name, String shortName, UUID leaderUuid) {
         String sql = "INSERT INTO partai (uuid, name, short_name, leader_uuid, balance, reputation, created_at) " +
                 "VALUES (?, ?, ?, ?, 0, 0, datetime('now'))";
 
         try (PreparedStatement ps = DatabaseManager.getConnection().prepareStatement(sql)) {
-            ps.setString(1, uuid.toString()); // ← GUNAKAN PARAMETER, BUKAN UUID.randomUUID()
+            ps.setString(1, uuid.toString());
             ps.setString(2, name);
             ps.setString(3, shortName);
             ps.setString(4, leaderUuid.toString());
@@ -111,6 +118,9 @@ public class PartaiManager {
 
     public static void update(UUID uuid, String name, String shortName, UUID leaderUuid, double balance,
             double reputation) {
+        // Clamp reputation ke range 0.0-1.0
+        reputation = clampReputation(reputation);
+        
         String sql = """
                     UPDATE partai
                     SET name = ?, short_name = ?, leader_uuid = ?, balance = ?, reputation = ?
@@ -128,6 +138,30 @@ public class PartaiManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static List<PartaiData> getAllPartai() {
+        String sql = "SELECT * FROM partai";
+        List<PartaiData> result = new ArrayList<>();
+
+        try (PreparedStatement ps = DatabaseManager.getConnection().prepareStatement(sql);
+                var rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                result.add(new PartaiData(
+                        UUID.fromString(rs.getString("uuid")),
+                        rs.getString("name"),
+                        rs.getString("short_name"),
+                        UUID.fromString(rs.getString("leader_uuid")),
+                        rs.getDouble("balance"),
+                        rs.getDouble("reputation"),
+                        rs.getLong("created_at")));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return result;
     }
 
     public static void updateSimple(UUID uuid, String name, String shortName, UUID leaderUuid) {
@@ -149,6 +183,13 @@ public class PartaiManager {
     }
 
     public static void delete(UUID uuid) {
+        // Hapus semua anggota partai
+        MemberManager.removeAllMembers(uuid);
+        
+        // Hapus semua relasi yang melibatkan partai ini
+        RelasiPartaiManager.deleteByPartai(uuid);
+        
+        // Hapus partai itu sendiri
         String sql = "DELETE FROM partai WHERE uuid = ?";
 
         try (PreparedStatement ps = DatabaseManager.getConnection().prepareStatement(sql)) {

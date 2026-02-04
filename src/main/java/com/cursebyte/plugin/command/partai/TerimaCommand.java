@@ -26,7 +26,8 @@ public class TerimaCommand {
         UUID playerUuid = player.getUniqueId();
 
         // Cek apakah sudah bergabung dengan partai
-        if (MemberService.getMemberData(playerUuid) != null) {
+        UUID existingPartaiUuid = MemberService.getPartaiUuid(playerUuid);
+        if (existingPartaiUuid != null) {
             MessageUtils.sendError(sender, "Kamu sudah bergabung dengan partai!");
             return;
         }

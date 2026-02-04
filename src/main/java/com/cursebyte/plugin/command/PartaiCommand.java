@@ -24,6 +24,7 @@ import com.cursebyte.plugin.command.partai.ReputasiCommand;
 import com.cursebyte.plugin.command.partai.SaldoCommand;
 import com.cursebyte.plugin.command.partai.SekutuCommand;
 import com.cursebyte.plugin.command.partai.SetorCommand;
+import com.cursebyte.plugin.command.partai.StatsCommand;
 import com.cursebyte.plugin.command.partai.StatusCommand;
 import com.cursebyte.plugin.command.partai.TarikCommand;
 import com.cursebyte.plugin.command.partai.TerimaCommand;
@@ -59,6 +60,7 @@ public class PartaiCommand implements CommandExecutor {
     private final SekutuCommand sekutuCommand;
     private final MusuhCommand musuhCommand;
     private final StatusCommand statusCommand;
+    private final StatsCommand statsCommand;
 
     public PartaiCommand(PartaiCore plugin) {
         // this.plugin = plugin;
@@ -85,6 +87,7 @@ public class PartaiCommand implements CommandExecutor {
         this.sekutuCommand = new SekutuCommand();
         this.musuhCommand = new MusuhCommand();
         this.statusCommand = new StatusCommand();
+        this.statsCommand = new StatsCommand();
     }
 
     @Override
@@ -123,6 +126,7 @@ public class PartaiCommand implements CommandExecutor {
             case "sekutu" -> sekutuCommand.execute(sender, args);
             case "musuh" -> musuhCommand.execute(sender, args);
             case "status" -> statusCommand.execute(sender, args);
+            case "stats" -> statsCommand.execute(sender, args);
             default -> MessageUtils.sendError(sender, "Subcommand tidak dikenal! Gunakan /partai help untuk bantuan.");
         }
         return true;

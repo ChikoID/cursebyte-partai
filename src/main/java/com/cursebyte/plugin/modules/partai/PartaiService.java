@@ -34,6 +34,10 @@ public class PartaiService {
         return data;
     }
 
+    public static java.util.List<PartaiData> getAllPartai() {
+        return PartaiManager.getAll();
+    }
+
     /**
      * Ambil partai berdasarkan nama.
      */
@@ -58,11 +62,14 @@ public class PartaiService {
     /**
      * Update reputation partai dan refresh cache.
      */
-    public static void updateReputation(UUID uuid, int newReputation) {
+    public static void updateReputation(UUID uuid, double newReputation) {
+        // Clamp reputation ke range 0.0-1.0
+        newReputation = PartaiManager.clampReputation(newReputation);
+        
         PartaiData data = getPartai(uuid);
         if (data != null) {
             PartaiManager.update(uuid, data.getName(), data.getShortName(), 
-                data.getLeaderUuid(), data.getBalance(), newReputation);
+                    data.getLeaderUuid(), data.getBalance(), newReputation);
             data.setReputation(newReputation);
             cache.put(uuid, data);
         }

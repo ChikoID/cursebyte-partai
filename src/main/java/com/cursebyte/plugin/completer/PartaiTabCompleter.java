@@ -50,6 +50,7 @@ public class PartaiTabCompleter implements TabCompleter {
                 result.add("musuh");
                 result.add("status");
                 result.add("reputasi");
+                result.add("stats");
             }
             case 2 -> {
                 String subcommand = args[0].toLowerCase();
@@ -60,7 +61,9 @@ public class PartaiTabCompleter implements TabCompleter {
                     case "edit" -> {
                         result.add("<nama_baru>");
                     }
-                    case "info", "daftar", "saldo", "status", "reputasi", "sekutu", "musuh" -> {
+                    case "info", "daftar", "saldo", "status", "reputasi" -> {
+                        var allPartai = com.cursebyte.plugin.modules.partai.PartaiManager.getAllPartai();
+                        allPartai.forEach(partai -> result.add(partai.getName()));
                     }
                     case "setor", "tarik" -> {
                         result.add("<jumlah>");
@@ -78,20 +81,30 @@ public class PartaiTabCompleter implements TabCompleter {
                     }
                 }
             }
-            case 3 -> {
+            default -> {
                 String subcommand = args[0].toLowerCase();
                 switch (subcommand) {
                     case "buat" -> {
-                        result.add("<tag_partai>");
+                        if (args.length == 3) {
+                            result.add("<tag_partai>");
+                        }
                     }
                     case "setor", "tarik" -> {
-                        result.add("[optional: alasan]");
+                        if (args.length == 3) {
+                            result.add("[optional: alasan]");
+                        }
                     }
                     case "edit" -> {
-                        result.add("<tag_baru>");
+                        if (args.length == 3) {
+                            result.add("<tag_baru>");
+                        }
                     }
                     case "promosi", "demosi" -> {
-                        result.add("<jabatan_baru>");
+                        // Selalu tampilkan pilihan jabatan untuk arg terakhir
+                        result.add("anggota");
+                        result.add("sekretaris");
+                        result.add("bendahara");
+                        result.add("wakil_ketua");
                     }
                 }
             }

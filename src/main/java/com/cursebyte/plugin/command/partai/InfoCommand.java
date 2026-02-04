@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.cursebyte.plugin.modules.citizen.CitizenService;
 import com.cursebyte.plugin.modules.member.MemberManager;
 import com.cursebyte.plugin.modules.partai.PartaiData;
 import com.cursebyte.plugin.modules.partai.PartaiManager;
@@ -49,9 +50,9 @@ public class InfoCommand {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         String createdDate = sdf.format(new Date(partai.getCreatedAt() * 1000));
         String leaderName = "Unknown";
-        Player leader = Bukkit.getPlayer(partai.getLeaderUuid());
-        if (leader != null) {
-            leaderName = leader.getName();
+        var leaderProfile = CitizenService.getProfile(partai.getLeaderUuid());
+        if (leaderProfile != null) {
+            leaderName = leaderProfile.getFullName();
         }
 
         int memberCount = MemberManager.getMembersByPartaiUuid(partai.getUuid()).size();

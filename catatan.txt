@@ -4,8 +4,6 @@ YANG SUDAH DI FIX / CHECK :
 - hapus
 - edit
 - info
-
-YANG BELUM DI FIX / CHECK :
 - undang
 - terima
 - tolak
@@ -19,6 +17,8 @@ YANG BELUM DI FIX / CHECK :
 - saldo
 - pengumuman
 - chat
+- reputasi
+
+YANG BELUM DI FIX / CHECK :
 - sekutu
 - musuh
-- reputasi

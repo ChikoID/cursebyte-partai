@@ -20,6 +20,13 @@ public class MemberService {
         // entries
     }
 
+    public static void removeMember(UUID playerUuid, UUID partaiUuid) {
+        MemberManager.removeMemberByPartai(playerUuid, partaiUuid);
+
+        // Invalidate cache untuk member ini
+        // Karena tidak ada registry per-player, biarkan lazy refresh handle stale entry
+    }
+
     /**
      * Gabungkan data citizen dengan role partai.
      */

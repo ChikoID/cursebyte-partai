@@ -8,6 +8,27 @@ import com.cursebyte.plugin.database.DatabaseManager;
 
 public class MemberManager {
 
+    /**
+     * Count berapa banyak member dengan role tertentu di partai
+     */
+    public static int countMembersByRole(UUID partaiUuid, String role) {
+        String sql = "SELECT COUNT(*) as count FROM partai_member WHERE partai_uuid = ? AND LOWER(jabatan) = LOWER(?)";
+
+        try (PreparedStatement ps = DatabaseManager.getConnection().prepareStatement(sql)) {
+            ps.setString(1, partaiUuid.toString());
+            ps.setString(2, role);
+            var rs = ps.executeQuery();
+            
+            if (rs.next()) {
+                return rs.getInt("count");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return 0;
+    }
+
     public static void initTable() {
         String sql = """
                 CREATE TABLE IF NOT EXISTS partai_member (
@@ -146,6 +167,18 @@ public class MemberManager {
 
         try (PreparedStatement ps = DatabaseManager.getConnection().prepareStatement(sql)) {
             ps.setString(1, playerUuid.toString());
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void removeMemberByPartai(UUID playerUuid, UUID partaiUuid) {
+        String sql = "DELETE FROM partai_member WHERE player_uuid = ? AND partai_uuid = ?";
+
+        try (PreparedStatement ps = DatabaseManager.getConnection().prepareStatement(sql)) {
+            ps.setString(1, playerUuid.toString());
+            ps.setString(2, partaiUuid.toString());
             ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();

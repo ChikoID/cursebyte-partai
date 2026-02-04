@@ -30,12 +30,17 @@ public class AdminPartaiTabCompleter implements TabCompleter {
                 result.add("balance");
                 result.add("list");
                 result.add("set");
+                result.add("kick");
+                result.add("reputation");
+                result.add("leader");
             }
             case 2 -> {
                 String subcommand = args[0].toLowerCase();
                 switch (subcommand) {
-                    case "reset", "bubarkan", "balance", "set" -> {
-                        PartaiManager.getAll().forEach(partai -> result.add(partai.getName()));
+                    case "bubarkan", "balance", "set", "kick", "reputation", "leader" -> {
+                        // Tampilkan daftar partai
+                        var allPartai = PartaiManager.getAllPartai();
+                        allPartai.forEach(partai -> result.add(partai.getName()));
                     }
                 }
             }
@@ -43,9 +48,15 @@ public class AdminPartaiTabCompleter implements TabCompleter {
                 String subcommand = args[0].toLowerCase();
                 switch (subcommand) {
                     case "balance" -> {
-                        result.add("<jumlah>");
+                        result.add("+1000");
+                        result.add("-1000");
                     }
-                    case "set" -> {
+                    case "reputation" -> {
+                        result.add("+0.1");
+                        result.add("-0.1");
+                    }
+                    case "set", "kick" -> {
+                        // Tampilkan player yang online
                         plugin.getServer().getOnlinePlayers().forEach(player -> {
                             var profile = CitizenService.getProfile(player.getUniqueId());
                             if (profile != null) {
@@ -53,18 +64,37 @@ public class AdminPartaiTabCompleter implements TabCompleter {
                             }
                         });
                     }
+                    case "leader" -> {
+                        // Leader: tampilkan player A (dari partai itu)
+                        plugin.getServer().getOnlinePlayers().forEach(player -> {
+                            var profile = CitizenService.getProfile(player.getUniqueId());
+                            if (profile != null) {
+                                result.add(profile.getFullName());
+                            }
+                        });
+                    }
+                    case "bubarkan" -> {
+                        result.add("[alasan_optional]");
+                    }
                 }
             }
             case 4 -> {
                 String subcommand = args[0].toLowerCase();
-                switch (subcommand) {
-                    case "set" -> {
-                        result.add("ketua");
-                        result.add("wakil_ketua");
-                        result.add("bendahara");
-                        result.add("sekretaris");
-                        result.add("anggota");
-                    }
+                if ("leader".equals(subcommand)) {
+                    // Leader: tampilkan player B
+                    plugin.getServer().getOnlinePlayers().forEach(player -> {
+                        var profile = CitizenService.getProfile(player.getUniqueId());
+                        if (profile != null) {
+                            result.add(profile.getFullName());
+                        }
+                    });
+                } else if ("set".equals(subcommand)) {
+                    // Set: tampilkan pilihan role pada arg ke-4
+                    result.add("ketua");
+                    result.add("wakil_ketua");
+                    result.add("bendahara");
+                    result.add("sekretaris");
+                    result.add("anggota");
                 }
             }
         }
