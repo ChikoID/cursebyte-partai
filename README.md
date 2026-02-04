@@ -82,7 +82,6 @@ role:
     jumlah: 44
 
 # Total maksimal: 50 anggota per partai
-```
 
 ---
 
